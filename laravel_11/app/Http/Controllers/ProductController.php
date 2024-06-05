@@ -16,4 +16,19 @@ class ProductController extends Controller
         $product = Product::create($request->all());
         return response()->json($product);
     }
+
+    public function show($id){
+
+    }
+
+    public function edit($id){
+        
+    }
+
+    public function update(Request $request, $id){
+        
+    }
+    public function destroy($id){
+        
+    }
 }

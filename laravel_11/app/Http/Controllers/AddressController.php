@@ -16,4 +16,19 @@ class AddressController extends Controller
         $address = Address::create($request->all());
         return response()->json($address);
     }
+
+    public function show($id){
+
+    }
+
+    public function edit($id){
+        
+    }
+
+    public function update(Request $request, $id){
+        
+    }
+    public function destroy($id){
+        
+    }
 }
