@@ -22,6 +22,7 @@ Route::post('/products', [ProductController::class, 'store']);
 Route::get('/addresses', [AddressController::class, 'index']);
 Route::post('/addresses', [AddressController::class,'store']);
 
+
 Route::get('/orders',[OrderController::class, 'index']);
 Route::post('/orders',[OrderController::class, 'store']);
 
