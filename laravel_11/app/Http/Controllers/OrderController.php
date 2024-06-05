@@ -19,17 +19,34 @@ class OrderController extends Controller
     }
 
     public function show($id){
-
-    }
-
-    public function edit($id){
-        
+        $order = Order::findOrFail($id);
+        return response()->json($order);
     }
 
     public function update(Request $request, $id){
+        try {
+            $data_validation = $request->validation([
+                "transactions_id" => "required",
+                "total_price" => "required",
+                "product_id" => "required",
+                "user_id" => "required",
+            ]);
         
+        $order = Order::findOrFail($id);
+        $order ->update($data_validation);
+        return response()->json($order);
+        } catch (ValidationException $error){
+            return response()->json(['errors' => $error()], 406);
+        }
     }
+
     public function destroy($id){
-        
+        try{
+        $order = Order::findOrFail($id);
+        $order ->delete();
+        return response()->json('The order was deleted');
+    }catch (Exception $error){
+        return response()->json(['message' => "We can't delete the order"],500);
+    }
     }
 }
