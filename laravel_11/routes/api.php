@@ -11,24 +11,38 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::get('/categories', [CategoryController::class, 'index']);
-Route::post('/categories', [CategoryController::class, 'store']);
-Route::get('/categories/{id}',[CategoryController::class, 'show']);
-Route::put('/categories/{id}', [CategoryController::class, 'update']);
-Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
+
+Route::controller(CategoryController::class)->group(function () {
+    Route::get('/categories', 'index');
+    Route::post('/categories', 'store');
+    Route::get('/categories/{id}','show');
+    Route::put('/categories/{id}', 'update');
+    Route::delete('/categories/{id}', 'destroy');
+});
 
 
+Route::controller(ProductController::class)->group(function () {
+    Route::get('/products', 'index');
+    Route::post('/products', 'store');
+    Route::get('/products/{id}', 'show');
+    Route::put('/products/{id}',  'update');
+    Route::delete('/products/{id}',  'destroy');
+});
 
-Route::get('/products', [ProductController::class, 'index']);
-Route::post('/products', [ProductController::class, 'store']);
 
-Route::get('/addresses', [AddressController::class, 'index']);
-Route::post('/addresses', [AddressController::class,'store']);
+Route::controller(AddressController::class)->group(function () {
+    Route::get('/addresses', 'index');
+    Route::post('/addresses', 'store');
+    Route::get('/addresses/{id}', 'show');
+    Route::put('/addresses/{id}',  'update');
+    Route::delete('/addresses/{id}',  'destroy');
+});
 
 
-Route::get('/orders',[OrderController::class, 'index']);
-Route::post('/orders',[OrderController::class, 'store']);
-Route::get('/orders/{id}',[OrderController::class, 'show']);
-Route::put('/orders/{id}', [OrderController::class, 'update']);
-Route::delete('/orders/{id}', [OrderController::class, 'destroy']);
-
+Route::controller(CategoryController::class)->group(function () {
+    Route::get('/orders', 'index');
+    Route::post('/orders', 'store');
+    Route::get('/orders/{id}', 'show');
+    Route::put('/orders/{id}',  'update');
+    Route::delete('/orders/{id}',  'destroy');
+});
