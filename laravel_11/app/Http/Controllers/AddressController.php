@@ -11,12 +11,12 @@ class AddressController extends Controller
 {
     function index()
     {
-       try{
-        $addresses = Address::all();
-        return response()->json($addresses);
-       }catch (Exception $e) {
-        return response()->json(["error" => "Failed to get addresses"], 500);
-    }
+        try {
+            $addresses = Address::all();
+            return response()->json($addresses);
+        } catch (Exception $e) {
+            return response()->json(["error" => "Failed to get addresses"], 500);
+        }
     }
 
     function store(Request $request)
@@ -36,8 +36,8 @@ class AddressController extends Controller
             return response()->json($address, 201);
         } catch (ValidationException $e) {
             return response()->json(['errors' => $e->errors()], 406);
-        }catch (Exception $e) {
-            return response()->json(["error" => "Failed to show address"], 500);
+        } catch (Exception $e) {
+            return response()->json(["error" => "Failed to store address"], 500);
         }
     }
 
