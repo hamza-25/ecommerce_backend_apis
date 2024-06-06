@@ -42,7 +42,7 @@ class OrderController extends Controller
             $order->update($data_validation);
             return response()->json($order);
         } catch (ValidationException $e) {
-            return response()->json(['es' => $e->errors()], 406);
+            return response()->json(['errors' => $e->errors()], 406);
         } catch (Exception $e) {
             return response()->json(['message'=> 'failed to update order'], 500);
         }
@@ -53,9 +53,9 @@ class OrderController extends Controller
         try {
             $order = Order::findOrFail($id);
             $order->delete();
-            return response()->json('The order was deleted');
-        } catch (Exception $error) {
-            return response()->json(['message' => "We can't delete the order"], 500);
+            return response()->json(['message' => 'order deleted succesfully']);
+        } catch (Exception $e) {
+            return response()->json(['errors' => "Failed to delete order"], 500);
         }
     }
 }

@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Category;
-// use Dotenv\Exception\ValidationException; // works but interpreter got error
-use Illuminate\Validation\ValidationException; // use that
-use Exception;
+use Exception; 
+use Illuminate\Validation\ValidationException; 
 
 class CategoryController extends Controller
 {
@@ -41,7 +41,7 @@ class CategoryController extends Controller
         } catch (ValidationException $e) {
             return response()->json(['errors' => $e->errors()], 406);
         } catch (Exception $e) {
-            return response()->json(['error' => "Failed to category product"], 500);
+            return response()->json(['error' => "Failed to update category"], 500);
         }
     }
 
@@ -50,9 +50,9 @@ class CategoryController extends Controller
         try {
             $category = Category::findOrFail($id);
             $category->delete();
-            return response()->json('The category was deleted');
+            return response()->json(['message' => 'category deleted successfuly']);
         } catch (Exception $error) {
-            return response()->json(['message' => "We can't delete the category"], 500);
+            return response()->json(['errors' => "Failed to delete category"], 500);
         }
     }
 }
