@@ -39,7 +39,7 @@ Route::controller(AddressController::class)->group(function () {
 });
 
 
-Route::controller(CategoryController::class)->group(function () {
+Route::controller(OrderController::class)->group(function () {
     Route::get('/orders', 'index');
     Route::post('/orders', 'store');
     Route::get('/orders/{id}', 'show');
