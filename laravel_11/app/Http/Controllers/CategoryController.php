@@ -11,8 +11,13 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        $categories = Category::all();
-        return response()->json($categories);
+        try{
+            $categories = Category::all();
+            return response()->json($categories);
+        }
+        catch(Exception $e){
+            return response()->json(['error' => 'something goes wrong'], 400);
+        }
     }
 
     public function store(Request $request)
