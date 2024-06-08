@@ -45,7 +45,7 @@ class AuthController extends Controller
     
             return $response;
         } catch (ValidationException $e) {
-            return response()->json(['errors' => $e->errors()], 406);
+            return response()->json($e->errors(), 406);
         }catch (Exception $e) {
             return response()->json(['error' => "Failed to create user"], 400);
         }
