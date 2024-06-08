@@ -1,9 +1,11 @@
 <?php
 
 use App\Http\Controllers\AddressController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\OrderController;
+use App\Http\Middleware\isAdmin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -45,4 +47,15 @@ Route::controller(OrderController::class)->group(function () {
     Route::get('/orders/{id}', 'show');
     Route::put('/orders/{id}',  'update');
     Route::delete('/orders/{id}',  'destroy');
+});
+
+Route::group(['prefix' => 'auth'], function ($router) {
+    Route::post('login', [AuthController::class,'login']);
+    Route::post('register', [AuthController::class,'register']);
+});
+
+Route::middleware(['auth:api'])->group(function(){
+    Route::post('logout', [AuthController::class,'logout']);
+    Route::post('refresh', [AuthController::class,'refresh']);
+    Route::post('me', [AuthController::class,'me']);
 });
