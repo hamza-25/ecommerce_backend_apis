@@ -57,7 +57,7 @@ class ProductController extends Controller
                 "description" => "required|min:5",
                 "price" => "required|numeric|min:0",
                 "image" => "url",
-                "category_id" => "required|z",
+                "category_id" => "required",
             ]);
             $product = Product::findOrFail($id);
             $product->update($data_validation);
