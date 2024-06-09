@@ -9,11 +9,6 @@ use App\Http\Middleware\isAdmin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-// Route::get('/user', function (Request $request) {
-//     return $request->user();
-// })->middleware('auth:sanctum');
-
-
 Route::controller(CategoryController::class)->group(function () {
     Route::get('/categories/{id}', 'show');
     Route::get('/categories', 'index');
@@ -57,9 +52,6 @@ Route::middleware(['auth:api'])->group(function () {
         Route::post('/orders', 'store');
     });
 });
-
-
-
 
 
 Route::middleware(['auth:api', isAdmin::class])->group(function () {

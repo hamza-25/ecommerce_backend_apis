@@ -9,27 +9,12 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Validation\ValidationException;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
-
-    // public function __construct()
-    // {
-    //     $this->middleware('auth:api', ['except' => ['login']]);
-    // }
-
     public function register(Request $request)
     {
-        // $data_validation = $request->validate([
-        //     "email"=> "required|email|string|unique:users|max:128",
-        //     "name"=> "required|string|min:3",
-        //     "password"=> "required|string|min:6",
-        // ]);
-
-        // $user = User::create($data_validation);
-        // $token = auth('api')->login($user);
-
-        // return $this->respondWithToken($token);
         try{
             $data_validation = $request->validate([
                 "email" => "required|email|string|unique:users|max:128",
@@ -54,16 +39,6 @@ class AuthController extends Controller
 
     public function login()
     {
-        // $credentials = request(['email', 'password']);
-
-        // if (! $token = auth('api')->attempt($credentials)) {
-        //     return response()->json(['error' => 'Unauthorized'], 401);
-        // }
-
-        // $role = auth('api')->user()->role;
-
-        // return $this->respondWithToken($token, $role);
-
         try{
             $credentials = request(['email', 'password']);
 
@@ -91,12 +66,9 @@ class AuthController extends Controller
 
     public function logout()
     {
+        JWTAuth::invalidate(JWTAuth::getToken());
         // auth('api')->logout();
 
-        // return response()->json(['message' => 'Successfully logged out']);
-        auth('api')->logout();
-
-        // Clear the token cookie
         $response = response()->json(['message' => 'Successfully logged out']);
        $response->withCookie(cookie()->forget('api_token'));
 
