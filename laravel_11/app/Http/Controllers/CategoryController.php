@@ -4,25 +4,24 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Category;
-use Exception; 
-use Illuminate\Validation\ValidationException; 
+use Exception;
+use Illuminate\Validation\ValidationException;
 
 class CategoryController extends Controller
 {
     public function index()
     {
-        try{
+        try {
             $categories = Category::all();
             return response()->json($categories);
-        }
-        catch(Exception $e){
-            return response()->json(['error' => 'something goes wrong'], 400);
+        } catch (Exception $e) {
+            return response()->json(['error' => 'Failed to get categories'], 400);
         }
     }
 
     public function store(Request $request)
     {
-        try{
+        try {
             $data_validation = $request->validate([
                 "name" => "required|unique:categories|min:2",
                 "description" => "required|min:4",
@@ -30,16 +29,20 @@ class CategoryController extends Controller
             ]);
             $category = Category::create($data_validation);
             return response()->json($category);
-        } catch (ValidationException $e){
-            return response()->json($e->errors() ,400);
+        } catch (ValidationException $e) {
+            return response()->json($e->errors(), 400);
         } catch (Exception $e) {
             return response()->json(['error' => "Failed to create category"], 500);
         }
     }
     public function show($id)
     {
-        $category = Category::findOrFail($id);
-        return response()->json($category);
+        try {
+            $category = Category::findOrFail($id);
+            return response()->json($category);
+        } catch (Exception $e) {
+            return response()->json(['error' => "Failed to get category"], 500);
+        }
     }
 
     public function update(Request $request, $id)
