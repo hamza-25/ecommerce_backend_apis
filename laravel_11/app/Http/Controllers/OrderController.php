@@ -9,22 +9,41 @@ use Exception;
 
 class OrderController extends Controller
 {
-    function index()
+    public function index()
     {
-        $orders = Order::all();
-        return response()->json($orders);
+        try {
+            $orders = Order::all();
+            return response()->json($orders);
+        } catch (Exception $e) {
+            return response()->json(['error' => 'Something went wrong'], 400);
+        }
     }
-
-    function store(Request $request)
+    public function store(Request $request)
     {
-        $order = Order::create($request->all());
-        return response()->json($order);
-    }
+        try {
+            $data_validation = $request->validate([
+                "transaction_id" => "required",
+                "total_price" => "required",
+                "product_id" => "required",
+                "user_id" => "required",
+            ]);
 
+            $order = Order::create($data_validation);
+            return response()->json($order);
+        } catch (ValidationException $e) {
+            return response()->json(['errors' => $e->errors()], 400);
+        } catch (Exception $e) {
+            return response()->json(['error' => 'Failed to create order'], 500);
+        }
+    }
     public function show($id)
     {
-        $order = Order::findOrFail($id);
-        return response()->json($order);
+        try {
+            $order = Order::findOrFail($id);
+            return response()->json($order);
+        } catch (Exception $e) {
+            return response()->json(['error' => 'Order not found'], 404);
+        }
     }
 
     public function update(Request $request, $id)
