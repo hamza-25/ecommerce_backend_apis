@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use Exception;
@@ -30,7 +31,15 @@ class ProductController extends Controller
                 "image" => "url",
                 "category_id" => "required|numeric",
             ]);
-            $product = Product::create($data_validation);
+            $category = Category::findOrFail($data_validation['category_id']);
+            $product = Product::create([
+                "title" => $data_validation['title'],
+                "description" => $data_validation['description'],
+                "price" => $data_validation['price'],
+                "image" => $data_validation['image'],
+                "category_id" => $data_validation['category_id'],
+                "category_name" => $category->name
+            ]);
             return response()->json($product, 201);
         } catch (ValidationException $e) {
             return response()->json(['errors' => $e->errors()], 406);

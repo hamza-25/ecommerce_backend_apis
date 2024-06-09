@@ -22,8 +22,19 @@ class CategoryController extends Controller
 
     public function store(Request $request)
     {
-        $category = Category::create($request->all());
-        return response()->json($category);
+        try{
+            $data_validation = $request->validate([
+                "name" => "required|unique:categories|min:2",
+                "description" => "required|min:4",
+                "image" => "url",
+            ]);
+            $category = Category::create($data_validation);
+            return response()->json($category);
+        } catch (ValidationException $e){
+            return response()->json($e->errors() ,400);
+        } catch (Exception $e) {
+            return response()->json(['error' => "Failed to create category"], 500);
+        }
     }
     public function show($id)
     {
@@ -43,7 +54,7 @@ class CategoryController extends Controller
             $category->update($data_validation);
             return response()->json($category);
         } catch (ValidationException $e) {
-            return response()->json(['errors' => $e->errors()], 406);
+            return response()->json($e->errors(), 406);
         } catch (Exception $e) {
             return response()->json(['error' => "Failed to update category"], 500);
         }
