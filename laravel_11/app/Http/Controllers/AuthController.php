@@ -70,8 +70,10 @@ class AuthController extends Controller
             if (!$token = auth('api')->attempt($credentials)) {
                 return response()->json(['error' => 'email or password incorrect'], 401);
             }
-    
-            $response = $this->respondWithToken($token);
+
+            $user = User::where('email', $credentials['email'])->first();
+
+            $response = $this->respondWithToken($token, $user->role);
             $response->withCookie(cookie('api_token', $token, 60));
     
             return $response;
