@@ -59,14 +59,17 @@ Route::middleware(['auth:api'])->group(function () {
 });
 
 
-Route::middleware(['auth:api', 'isAdmin'])->group(function () {
+
+
+
+Route::middleware(['auth:api', isAdmin::class])->group(function () {
 
     Route::controller(CategoryController::class)->group(function () {
         Route::post('/categories', 'store');
         Route::put('/categories/{id}', 'update');
         Route::delete('/categories/{id}', 'destroy');
     });
-
+    
     Route::controller(ProductController::class)->group(function () {
         Route::post('/products', 'store');
         Route::put('/products/{id}',  'update');
