@@ -42,7 +42,7 @@ class OrderController extends Controller
             $order = Order::findOrFail($id);
             return response()->json($order);
         } catch (Exception $e) {
-            return response()->json(['error' => 'Order not found'], 404);
+            return response()->json(['error' => 'failed to get order'], 404);
         }
     }
 
