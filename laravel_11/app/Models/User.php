@@ -24,6 +24,7 @@ class User extends Authenticatable implements JWTSubject
         'role',
     ];
 
+
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -44,6 +45,7 @@ class User extends Authenticatable implements JWTSubject
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'cart' => 'array',
         ];
     }
 
