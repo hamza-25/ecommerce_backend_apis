@@ -73,4 +73,13 @@ class CategoryController extends Controller
             return response()->json(['errors' => "Failed to delete category"], 500);
         }
     }
+
+    public function get_products_by_category($id){
+        try {
+            $category = Category::findOrFail($id);
+            return response()->json($category->products);
+        } catch (Exception $e) {
+            return response()->json(['error' => "Failed to get products by category"], 500);
+        }
+    }
 }
