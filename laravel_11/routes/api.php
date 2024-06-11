@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 Route::controller(CategoryController::class)->group(function () {
     Route::get('/categories/{id}', 'show');
     Route::get('/categories', 'index');
-    Route::get('/categories/products/{id}', 'get_products_by_category');
+    Route::get('/categories/{id}/products', 'get_products_by_category');
     // Route::get('/categories/products', function (){
     //     return 'hello';
     // });
