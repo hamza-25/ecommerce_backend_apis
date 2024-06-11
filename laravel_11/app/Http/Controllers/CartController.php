@@ -17,9 +17,9 @@ class CartController extends Controller
         $carts = $user->cart ? $user->cart : [];
         $products = [];
         foreach($carts as $cart){
-            $products [] = Product::findOrFail($cart);
+            $products [] = Product::findOrFail($cart); 
         }
-        return response()->json($products);
+        return response()->json($products, 200);
        }catch(\Exception $e){
         return response()->json(["error"=> 'Failed to get cart item']);
        }
@@ -36,7 +36,7 @@ class CartController extends Controller
                 return response()->json(["message"=> "item Already Exists"]);
             }
             array_push($cart, (int)$request->product_id);
-            $user->cart = $cart;
+            $user->cart = $cart; 
             $user->save();
             return response()->json(["message" => "item added to cart"], 201);
            }catch(ValidationException $e){

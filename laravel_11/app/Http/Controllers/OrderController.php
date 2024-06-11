@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Address;
 use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -26,9 +27,10 @@ class OrderController extends Controller
         try {
             $data_validation = $request->validate([
                 "product_id" => "required|array",
+                // "full_name" => "required",
                 // "user_id" => "numeric|exists:users,id|min:1",
             ]);
-
+            // $address = Address::create([]);
             $transaction_id = (string)Auth::user()->id . (string)Str::uuid();
             $products = $request->product_id;
             $orders = [];
@@ -38,6 +40,7 @@ class OrderController extends Controller
                     "product_id" =>$productId,
                     "user_id" => Auth::user()->id,
                     "transaction_id" => $transaction_id,
+                    // "address_id" => $address->id,
                 ]);
             }
             return response()->json($orders, 201);
