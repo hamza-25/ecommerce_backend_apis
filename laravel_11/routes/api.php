@@ -52,17 +52,16 @@ Route::middleware(['auth:api'])->group(function () {
         Route::delete('/addresses/{id}',  'destroy');
     });
 
-    Route::controller(OrderController::class)->group(function () {
-        Route::get('/orders/{id}', 'show'); // check request user id == addresses.user.id
-        Route::post('/orders', 'store');
-    });
-
-
     Route::controller(CartController::class)->group(function () {
         Route::get('/cart/clear', 'clear');
         Route::get('/cart', 'index');
         Route::post('/cart', 'store');
         Route::delete('/cart/{id}', 'destroy');
+    });
+
+    Route::controller(OrderController::class)->group(function () {
+        Route::get('/orders/{id}', 'show'); // check request user id == addresses.user.id
+        Route::post('/orders', 'store');
     });
 });
 
@@ -74,7 +73,7 @@ Route::middleware(['auth:api', isAdmin::class])->group(function () {
         Route::put('/categories/{id}', 'update');
         Route::delete('/categories/{id}', 'destroy');
     });
-    
+
     Route::controller(ProductController::class)->group(function () {
         Route::post('/products', 'store');
         Route::put('/products/{id}',  'update');

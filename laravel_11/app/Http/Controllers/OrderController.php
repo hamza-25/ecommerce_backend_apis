@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\Product;
 use Illuminate\Http\Request;
-use Illuminate\Validation\ValidationException; 
+use Illuminate\Validation\ValidationException;
 use Exception;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class OrderController extends Controller
 {
@@ -22,24 +25,33 @@ class OrderController extends Controller
     {
         try {
             $data_validation = $request->validate([
-                "transaction_id" => "required",
-                "total_price" => "required",
-                "product_id" => "required",
-                "user_id" => "required",
+                "product_id" => "required|array",
+                // "user_id" => "numeric|exists:users,id|min:1",
             ]);
 
-            $order = Order::create($data_validation);
-            return response()->json($order);
+            $transaction_id = (string)Auth::user()->id . (string)Str::uuid();
+            $products = $request->product_id;
+            $orders = [];
+            foreach ($products as $productId) {
+                $orders [] = Order::create([
+                    "total_price" => Product::findOrFail($productId)->price,
+                    "product_id" =>$productId,
+                    "user_id" => Auth::user()->id,
+                    "transaction_id" => $transaction_id,
+                ]);
+            }
+            return response()->json($orders, 201);
+
         } catch (ValidationException $e) {
-            return response()->json(['errors' => $e->errors()], 400);
+            return response()->json([$e->errors()], 400);
         } catch (Exception $e) {
-            return response()->json(['error' => 'Failed to create order'], 500);
+            return response()->json(['error' => 'Failed to create order'/* . $e->getMessage() */], 500);
         }
     }
     public function show($id)
     {
         try {
-            $order = Order::findOrFail($id);
+            $order = Order::findOrFail($id)->where("user_id", Auth::user()->id)->first();
             return response()->json($order);
         } catch (Exception $e) {
             return response()->json(['error' => 'failed to get order'], 404);
@@ -62,7 +74,7 @@ class OrderController extends Controller
         } catch (ValidationException $e) {
             return response()->json(['errors' => $e->errors()], 406);
         } catch (Exception $e) {
-            return response()->json(['message'=> 'failed to update order'], 500);
+            return response()->json(['message' => 'failed to update order'], 500);
         }
     }
 
