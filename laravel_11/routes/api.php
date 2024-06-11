@@ -52,15 +52,6 @@ Route::middleware(['auth:api'])->group(function () {
         Route::post('/orders', 'store');
     });
 
-    Route::controller(CartController::class)->group(function () {
-        Route::get('/cart', 'index');
-        Route::post('/cart', 'store');
-        Route::get('/cart/{id}', 'show');
-        Route::put('/cart/{id}',  'update');
-        Route::delete('/cart/{id}',  'destroy');
-    });
-
-    
 });
 
 
