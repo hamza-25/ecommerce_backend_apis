@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\OrderController;
@@ -52,6 +53,13 @@ Route::middleware(['auth:api'])->group(function () {
         Route::post('/orders', 'store');
     });
 
+
+    Route::controller(CartController::class)->group(function () {
+        Route::get('/cart/clear', 'clear');
+        Route::get('/cart', 'index');
+        Route::post('/cart', 'store');
+        Route::delete('/cart/{id}', 'destroy');
+    });
 });
 
 
