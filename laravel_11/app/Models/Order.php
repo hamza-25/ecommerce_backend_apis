@@ -12,7 +12,8 @@ class Order extends Model
         "total_price",
         "transaction_id",
         "product_id",
-        "user_id"
+        "user_id",
+        "address_id"
     ];
 
     function user() {
