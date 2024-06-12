@@ -36,7 +36,7 @@ class CartController extends Controller
                 return response()->json(["message"=> "item Already Exists"]);
             }
             array_push($cart, (int)$request->product_id);
-            $user->cart = $cart; 
+            $user->cart = array_values($cart); 
             $user->save();
             return response()->json(["message" => "item added to cart"], 201);
            }catch(ValidationException $e){
@@ -56,6 +56,7 @@ class CartController extends Controller
                 return response()->json(["message"=> "item doesnt Exists on Carts"], 406);
             }
             $index = null;
+            $cart = array_values($cart);
             for( $i = 0; $i < count($cart); $i++ ){
                 if ($cart[$i] == $id){
                     $index = $i;
@@ -63,7 +64,7 @@ class CartController extends Controller
                 }
             }
             unset($cart[$index]);
-            $user->cart = $cart;
+            $user->cart = array_values($cart);
             $user->save();
             return response()->json(["message" => "item deleted from cart"], 200);
            }catch(ValidationException $e){
