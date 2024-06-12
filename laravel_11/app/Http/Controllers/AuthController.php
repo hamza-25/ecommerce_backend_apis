@@ -53,7 +53,7 @@ class AuthController extends Controller
     
             return $response;
         } catch (Exception $e) {
-            return response()->json(['error' => "Failed to login"], 400);
+            return response()->json(['error' => "Failed to login" . $e->getMessage()], 400);
         }
     }
 

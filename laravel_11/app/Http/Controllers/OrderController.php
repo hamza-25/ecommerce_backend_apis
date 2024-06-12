@@ -27,28 +27,42 @@ class OrderController extends Controller
         try {
             $data_validation = $request->validate([
                 "product_id" => "required|array",
-                // "full_name" => "required",
-                // "user_id" => "numeric|exists:users,id|min:1",
+                "full_name" => "required",
+                "street" => "required",
+                "city" => "required",
+                "province" => "required",
+                "country" => "required",
+                "phone" => "required",
+                "zip_code" => "required",
             ]);
-            // $address = Address::create([]);
+            $address = Address::create([
+                "full_name" => $data_validation['full_name'],
+                "street" => $data_validation['street'],
+                "city" => $data_validation['city'],
+                "province" => $data_validation['province'],
+                "country" => $data_validation['country'],
+                "phone" => $data_validation['phone'],
+                "zip_code" => $data_validation['zip_code'],
+                "user_id"=> Auth::user()->id,
+            ]);
             $transaction_id = (string)Auth::user()->id . (string)Str::uuid();
             $products = $request->product_id;
             $orders = [];
             foreach ($products as $productId) {
-                $orders [] = Order::create([
+                $orders[] = Order::create([
                     "total_price" => Product::findOrFail($productId)->price,
-                    "product_id" =>$productId,
+                    "product_id" => $productId,
                     "user_id" => Auth::user()->id,
                     "transaction_id" => $transaction_id,
+                    "address_id" => $address->id,
                     // "address_id" => $address->id,
                 ]);
             }
-            return response()->json($orders, 201);
-
+            return response()->json(['message'=> 'order created successfully', "orders" => $orders], 201);
         } catch (ValidationException $e) {
             return response()->json([$e->errors()], 400);
         } catch (Exception $e) {
-            return response()->json(['error' => 'Failed to create order'/* . $e->getMessage() */], 500);
+            return response()->json(['error' => 'Failed to create order' . $e->getMessage()], 500);
         }
     }
     public function show($id)
