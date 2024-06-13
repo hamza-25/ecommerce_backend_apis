@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Address;
+use App\Models\Category;
+use App\Models\User;
 use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Exception;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class OrderController extends Controller
@@ -17,9 +20,21 @@ class OrderController extends Controller
     {
         try {
             $orders = Order::all();
+            // $user = User::findOrFail(Auth::user()->id);
+            // $users = User::all();
+            // $userOrder = [];
+            // foreach ($users as $user) {
+            //     $userOrder[] = $user->orders;
+            // }
+            // return response()->json($userOrder);
+            foreach ($orders as $order) {
+                $order ["user_name"] = User::find($order->user_id)->name;
+                $order ["address"] = Address::find($order->address_id);
+                $order ["product_image"] = Product::find($order->product_id)->image;
+            }
             return response()->json($orders);
         } catch (Exception $e) {
-            return response()->json(['error' => 'Something went wrong'], 400);
+            return response()->json(['error' => 'Something went wrong' . $e->getMessage()], 400);
         }
     }
     public function store(Request $request)
