@@ -13,6 +13,7 @@ class CategoryController extends Controller
     {
         try {
             $categories = Category::all();
+            // redis cahing 
             return response()->json($categories);
         } catch (Exception $e) {
             return response()->json(['error' => 'Failed to get categories'], 400);
@@ -39,6 +40,8 @@ class CategoryController extends Controller
     {
         try {
             $category = Category::findOrFail($id);
+            // caching redis $set viwes = +1
+            // views += 1;
             return response()->json($category);
         } catch (Exception $e) {
             return response()->json(['error' => "Failed to get category"], 500);

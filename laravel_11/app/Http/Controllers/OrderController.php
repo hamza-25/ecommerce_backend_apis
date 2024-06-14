@@ -20,26 +20,21 @@ class OrderController extends Controller
     {
         try {
             $orders = Order::all();
-            // $user = User::findOrFail(Auth::user()->id);
-            // $users = User::all();
-            // $userOrder = [];
-            // foreach ($users as $user) {
-            //     $userOrder[] = $user->orders;
-            // }
-            // return response()->json($userOrder);
             foreach ($orders as $order) {
-                $order ["user_name"] = User::find($order->user_id)->name;
-                $order ["address"] = Address::find($order->address_id);
-                $order ["product_image"] = Product::find($order->product_id)->image;
+                $order["user_name"] = User::find($order->user_id)->name;
+                $order["address"] = Address::find($order->address_id);
+                $order["product_image"] = Product::find($order->product_id)->image;
             }
             return response()->json($orders);
         } catch (Exception $e) {
-            return response()->json(['error' => 'Something went wrong' . $e->getMessage()], 400);
+            return response()->json(['error' => 'Something went wrong'], 400);
         }
     }
     public function store(Request $request)
     {
+        DB::beginTransaction();
         try {
+            $quantity = 1;
             $data_validation = $request->validate([
                 "product_id" => "required|array",
                 "full_name" => "required",
@@ -58,25 +53,35 @@ class OrderController extends Controller
                 "country" => $data_validation['country'],
                 "phone" => $data_validation['phone'],
                 "zip_code" => $data_validation['zip_code'],
-                "user_id"=> Auth::user()->id,
+                "user_id" => Auth::user()->id,
             ]);
             $transaction_id = (string)Auth::user()->id . (string)Str::uuid();
             $products = $request->product_id;
             $orders = [];
             foreach ($products as $productId) {
+                $product = Product::where('id', $productId)->lockForUpdate()->first();
+                if (!(($product->quantity - $quantity) >= 0)) {
+                    DB::rollBack();
+                    return response()->json(['message' => 'Not enough stock'], 400);
+                }
+                $product->quantity -= $quantity;
+                // dd($product->quantity);
+                $product->save();
                 $orders[] = Order::create([
-                    "total_price" => Product::findOrFail($productId)->price,
+                    "total_price" => Product::findOrFail($productId)->price * $quantity,
                     "product_id" => $productId,
                     "user_id" => Auth::user()->id,
                     "transaction_id" => $transaction_id,
                     "address_id" => $address->id,
-                    // "address_id" => $address->id,
                 ]);
             }
-            return response()->json(['message'=> 'order created successfully', "orders" => $orders], 201);
+            DB::commit();
+            return response()->json(['message' => 'order created successfully', "orders" => $orders], 201);
         } catch (ValidationException $e) {
+            DB::rollBack();
             return response()->json([$e->errors()], 400);
         } catch (Exception $e) {
+            DB::rollBack();
             return response()->json(['error' => 'Failed to create order' . $e->getMessage()], 500);
         }
     }
