@@ -64,3 +64,41 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## API Endpoints
+Authentication
+POST /auth/login : Log in a user.
+POST /auth/register : Register a new user.
+POST /logout : Log out the current user.
+POST /refresh : Refresh the access token.
+POST /me : Get current user information.
+Categories
+GET /api/categories : Get all categories.
+GET /api/categories/{id} : Get category by ID.
+GET /api/categories/{id}/products : Get products by category ID.
+POST /api/categories : Create a new category.
+PUT /api/categories/{id} : Update category by ID.
+DELETE /api/categories : Delete category.
+Products
+GET /api/products : Get all products.
+GET /api/products/{id} : Get product by ID.
+POST /api/products : Create a new product.
+PUT /api/products/{id} : Update product by ID.
+DELETE /api/products : Delete product.
+Addresses
+GET /api/addresses : Get all addresses.
+GET /api/addresses/{id} : Get address by ID.
+POST /api/addresses : Create a new address.
+PUT /api/addresses/{id} : Update address by ID.
+DELETE /api/addresses : Delete address.
+Orders
+GET /api/orders : Get all orders.
+GET /api/orders/{id} : Get order by ID.
+POST /api/orders : Create a new order.
+PUT /api/orders/{id} : Update order by ID.
+DELETE /api/orders : Delete order.
+Cart
+GET /cart/clear : Clear the cart.
+GET /api/cart : Get all products in the cart.
+POST /api/cart : Add item to the cart.
+DELETE /api/cart : Remove item from the cart.
